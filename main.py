@@ -103,7 +103,7 @@ def closeBlinds():
 
     inMotion = True
     motorClose.start(60)
-    time.sleep(30)
+    time.sleep(45)
     motorClose.stop()
     inMotion = False
 
