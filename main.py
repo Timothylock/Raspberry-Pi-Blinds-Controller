@@ -56,6 +56,10 @@ def turnOn():
     global inMotion
     isOpen = True
 
+    # early bypass
+    if isOpen:
+        return True
+
     if inMotion:
         return False
 
@@ -69,6 +73,10 @@ def turnOff():
     global inMotion
     isOpen = False
 
+    # early bypass
+    if not isOpen:
+        return True
+
     if inMotion:
         return False
 
@@ -81,10 +89,6 @@ def openBlinds():
     global isOpen
     global inMotion
 
-    # early bypass
-    if isOpen:
-        return True
-
     inMotion = True
     motorOpen.start(100)
     time.sleep(15)
@@ -94,10 +98,6 @@ def openBlinds():
 def closeBlinds():
     global isOpen
     global inMotion
-
-    # early bypass
-    if not isOpen:
-        return True
 
     inMotion = True
     motorClose.start(60)
