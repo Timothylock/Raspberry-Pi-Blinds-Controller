@@ -1,10 +1,18 @@
 from flask import Flask
 from flask import request
 import json
+import RPi.GPIO as GPIO
+import time
+import threading
 app = Flask(__name__)
 
 # Variables
-isOn = False
+isOpen = False
+inMotion = False
+motorOpen = None
+motorClose = None
+motorOpenPin = 20
+motorClosePin = 21
 
 # App routes
 @app.route("/")
@@ -41,21 +49,80 @@ def setState():
     return "Invalid payload", 400
 
 def fetchState():
-    return json.dumps({"is_active": isOn}), 200
+    return json.dumps({"is_active": isOpen}), 200
 
 def turnOn():
-    global isOn
-    isOn = True
+    global isOpen
+    global inMotion
+    isOpen = True
 
-    # Implement this. Return False on any error
+    if inMotion:
+        return False
+
+    t = threading.Thread(target=openBlinds)
+    t.start()
+
     return True
 
 def turnOff():
-    global isOn
-    isOn = False
+    global isOpen
+    global inMotion
+    isOpen = False
 
-    # Implement this. Return False on any error
+    if inMotion:
+        return False
+
+    t = threading.Thread(target=closeBlinds)
+    t.start()
+
     return True
 
+def openBlinds():
+    global isOpen
+    global inMotion
+
+    # early bypass
+    if isOpen:
+        return True
+
+    inMotion = True
+    motorOpen.start(100)
+    time.sleep(15)
+    motorOpen.stop()
+    inMotion = False
+
+def closeBlinds():
+    global isOpen
+    global inMotion
+
+    # early bypass
+    if not isOpen:
+        return True
+
+    inMotion = True
+    motorClose.start(60)
+    time.sleep(30)
+    motorClose.stop()
+    inMotion = False
+
+
+def setup():
+    GPIO.setmode(GPIO.BCM)
+
+    GPIO.setup(motorOpenPin, GPIO.OUT)
+    GPIO.setup(motorClosePin, GPIO.OUT)
+
+    global motorOpen
+    global motorClose
+
+    motorOpen = GPIO.PWM(motorOpenPin, 100)
+    motorClose = GPIO.PWM(motorClosePin, 100)
+
+    # Close the blinds slowly
+    motorClose.start(60)
+    time.sleep(60)
+    motorClose.stop()
+
 if __name__ == "__main__":
+    setup()
     app.run(host="0.0.0.0")
