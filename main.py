@@ -54,11 +54,12 @@ def fetchState():
 def turnOn():
     global isOpen
     global inMotion
-    isOpen = True
 
     # early bypass
     if isOpen:
         return True
+
+    isOpen = True
 
     if inMotion:
         return False
@@ -71,11 +72,12 @@ def turnOn():
 def turnOff():
     global isOpen
     global inMotion
-    isOpen = False
 
     # early bypass
     if not isOpen:
         return True
+
+    isOpen = False
 
     if inMotion:
         return False
