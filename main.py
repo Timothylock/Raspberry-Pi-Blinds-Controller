@@ -75,8 +75,8 @@ def closeBlinds():
     global motorClose
 
     inMotion = True
-    motorClose.start(60)
-    time.sleep(45)
+    motorClose.start(75)
+    time.sleep(35)
     motorClose.stop()
     inMotion = False
     isOpen = False
@@ -116,7 +116,7 @@ def setup():
     motorClose.stop()
 
     # Close the blinds slowly
-    motorClose.start(60)
+    motorClose.start(70)
     time.sleep(60)
     motorClose.stop()
 
