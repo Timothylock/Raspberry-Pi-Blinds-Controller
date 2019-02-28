@@ -63,11 +63,11 @@ def openBlinds():
     global motorOpen
 
     inMotion = True
+    isOpen = True
     motorOpen.start(100)
     time.sleep(15)
     motorOpen.stop()
     inMotion = False
-    isOpen = True
 
 def closeBlinds():
     global isOpen
@@ -75,11 +75,11 @@ def closeBlinds():
     global motorClose
 
     inMotion = True
+    isOpen = False
     motorClose.start(75)
     time.sleep(35)
     motorClose.stop()
     inMotion = False
-    isOpen = False
 
 def checker():
     global isOpen
