@@ -9,10 +9,14 @@ app = Flask(__name__)
 # Variables
 isOpen = False
 inMotion = False
-motorOpen = None
-motorClose = None
-motorOpenPin = 20
-motorClosePin = 21
+slidingMotorOpen = None
+slidingMotorClose = None
+turningMotorOpen = None
+turningMotorClose = None
+slidingMotorOpenPin = 20
+slidingMotorClosePin = 21
+turningMotorOpenPin = 19
+turningMotorClosePin = 26
 desiredState = "closed"
 
 # App routes
@@ -60,25 +64,33 @@ def turnOff():
 def openBlinds():
     global isOpen
     global inMotion
-    global motorOpen
+    global slidingMotorOpen
+    global turningMotorOpen
 
     inMotion = True
     isOpen = True
-    motorOpen.start(100)
-    time.sleep(15)
-    motorOpen.stop()
+    turningMotorOpen.start(100)
+    time.sleep(20)
+    turningMotorOpen.stop()
+    slidingMotorOpen.start(100)
+    time.sleep(30)
+    slidingMotorOpen.stop()
     inMotion = False
 
 def closeBlinds():
     global isOpen
     global inMotion
-    global motorClose
+    global slidingMotorClose
+    global turningMotorClose
 
     inMotion = True
     isOpen = False
-    motorClose.start(75)
+    slidingMotorClose.start(90)
     time.sleep(35)
-    motorClose.stop()
+    slidingMotorClose.stop()
+    turningMotorClose.start(100)
+    time.sleep(25)
+    turningMotorClose.stop()
     inMotion = False
 
 def checker():
@@ -103,22 +115,33 @@ def checker():
 def setup():
     GPIO.setmode(GPIO.BCM)
 
-    GPIO.setup(motorOpenPin, GPIO.OUT)
-    GPIO.setup(motorClosePin, GPIO.OUT)
+    GPIO.setup(slidingMotorOpenPin, GPIO.OUT)
+    GPIO.setup(slidingMotorClosePin, GPIO.OUT)
+    GPIO.setup(turningMotorOpenPin, GPIO.OUT)
+    GPIO.setup(turningMotorClosePin, GPIO.OUT)
 
-    global motorOpen
-    global motorClose
+    global slidingMotorOpen
+    global slidingMotorClose
+    global turningMotorOpen
+    global turningMotorClose
 
-    motorOpen = GPIO.PWM(motorOpenPin, 100)
-    motorClose = GPIO.PWM(motorClosePin, 100)
+    slidingMotorOpen = GPIO.PWM(slidingMotorOpenPin, 100)
+    slidingMotorClose = GPIO.PWM(slidingMotorClosePin, 100)
+    turningMotorOpen = GPIO.PWM(turningMotorOpenPin, 100)
+    turningMotorClose = GPIO.PWM(turningMotorClosePin, 100)
 
-    motorOpen.stop()
-    motorClose.stop()
+    slidingMotorOpen.stop()
+    slidingMotorClose.stop()
+    turningMotorOpen.stop()
+    turningMotorClose.stop()
 
-    # Close the blinds slowly
-    motorClose.start(70)
+    # Close the blinds
+    slidingMotorClose.start(100)
     time.sleep(60)
-    motorClose.stop()
+    slidingMotorClose.stop()
+    turningMotorClose.start(100)
+    time.sleep(45)
+    turningMotorClose.stop()
 
     threading.Thread(target=checker).start()
 
