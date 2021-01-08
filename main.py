@@ -88,8 +88,8 @@ def closeBlinds():
     slidingMotorClose.start(100)
     time.sleep(32)
     slidingMotorClose.stop()
-    turningMotorClose.start(80)
-    time.sleep(10)
+    turningMotorClose.start(100)
+    time.sleep(8)
     turningMotorClose.stop()
     inMotion = False
 
