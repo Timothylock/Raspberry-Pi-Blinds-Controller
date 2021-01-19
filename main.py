@@ -73,7 +73,7 @@ def openBlinds():
     time.sleep(8)
     turningMotorOpen.stop()
     slidingMotorOpen.start(100)
-    time.sleep(30)
+    time.sleep(32)
     slidingMotorOpen.stop()
     inMotion = False
 
@@ -86,7 +86,7 @@ def closeBlinds():
     inMotion = True
     isOpen = False
     slidingMotorClose.start(100)
-    time.sleep(32)
+    time.sleep(35)
     slidingMotorClose.stop()
     turningMotorClose.start(100)
     time.sleep(8)
